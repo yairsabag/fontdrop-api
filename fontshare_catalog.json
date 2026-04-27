@@ -1,0 +1,902 @@
+[
+  {
+    "name": "Kihim",
+    "slug": "kihim",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/kihim",
+    "hint": ""
+  },
+  {
+    "name": "Comico",
+    "slug": "comico",
+    "categories": [
+      "handwriting"
+    ],
+    "url": "https://www.fontshare.com/fonts/comico",
+    "hint": ""
+  },
+  {
+    "name": "Rowan",
+    "slug": "rowan",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/rowan",
+    "hint": ""
+  },
+  {
+    "name": "General Sans",
+    "slug": "general-sans",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/general-sans",
+    "hint": "geometric neutral sans"
+  },
+  {
+    "name": "Technor",
+    "slug": "technor",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/technor",
+    "hint": ""
+  },
+  {
+    "name": "Synonym",
+    "slug": "synonym",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/synonym",
+    "hint": "humanist sans"
+  },
+  {
+    "name": "Gambetta",
+    "slug": "gambetta",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/gambetta",
+    "hint": "elegant high-contrast serif"
+  },
+  {
+    "name": "Gambarino",
+    "slug": "gambarino",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/gambarino",
+    "hint": ""
+  },
+  {
+    "name": "Sentient",
+    "slug": "sentient",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/sentient",
+    "hint": "refined text serif"
+  },
+  {
+    "name": "Boska",
+    "slug": "boska",
+    "categories": [
+      "serif, display"
+    ],
+    "url": "https://www.fontshare.com/fonts/boska",
+    "hint": "editorial serif display"
+  },
+  {
+    "name": "Switzer",
+    "slug": "switzer",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/switzer",
+    "hint": "neo-grotesque sans"
+  },
+  {
+    "name": "Tabular",
+    "slug": "tabular",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/tabular",
+    "hint": ""
+  },
+  {
+    "name": "Tanker",
+    "slug": "tanker",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/tanker",
+    "hint": "bold heavy display sans"
+  },
+  {
+    "name": "Expose",
+    "slug": "expose",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/expose",
+    "hint": ""
+  },
+  {
+    "name": "Striper",
+    "slug": "striper",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/striper",
+    "hint": ""
+  },
+  {
+    "name": "Boxing",
+    "slug": "boxing",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/boxing",
+    "hint": ""
+  },
+  {
+    "name": "Pilcrow Rounded",
+    "slug": "pilcrow-rounded",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/pilcrow-rounded",
+    "hint": ""
+  },
+  {
+    "name": "Melodrama",
+    "slug": "melodrama",
+    "categories": [
+      "sans, display"
+    ],
+    "url": "https://www.fontshare.com/fonts/melodrama",
+    "hint": "high contrast display serif"
+  },
+  {
+    "name": "Kohinoor Zerone",
+    "slug": "kohinoor-zerone",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/kohinoor-zerone",
+    "hint": ""
+  },
+  {
+    "name": "New Title",
+    "slug": "new-title",
+    "categories": [
+      "sans, display"
+    ],
+    "url": "https://www.fontshare.com/fonts/new-title",
+    "hint": ""
+  },
+  {
+    "name": "Aktura",
+    "slug": "aktura",
+    "categories": [
+      "serif,  blackletter, display"
+    ],
+    "url": "https://www.fontshare.com/fonts/aktura",
+    "hint": ""
+  },
+  {
+    "name": "Alpino",
+    "slug": "alpino",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/alpino",
+    "hint": ""
+  },
+  {
+    "name": "Amulya",
+    "slug": "amulya",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/amulya",
+    "hint": ""
+  },
+  {
+    "name": "Array",
+    "slug": "array",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/array",
+    "hint": ""
+  },
+  {
+    "name": "Author",
+    "slug": "author",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/author",
+    "hint": ""
+  },
+  {
+    "name": "Bespoke Sans",
+    "slug": "bespoke-sans",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/bespoke-sans",
+    "hint": ""
+  },
+  {
+    "name": "Bespoke Serif",
+    "slug": "bespoke-serif",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/bespoke-serif",
+    "hint": ""
+  },
+  {
+    "name": "Bespoke Slab",
+    "slug": "bespoke-slab",
+    "categories": [
+      "slab"
+    ],
+    "url": "https://www.fontshare.com/fonts/bespoke-slab",
+    "hint": ""
+  },
+  {
+    "name": "Bespoke Stencil",
+    "slug": "bespoke-stencil",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/bespoke-stencil",
+    "hint": ""
+  },
+  {
+    "name": "Clash Grotesk",
+    "slug": "clash-grotesk",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/clash-grotesk",
+    "hint": ""
+  },
+  {
+    "name": "Clash Display",
+    "slug": "clash-display",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/clash-display",
+    "hint": ""
+  },
+  {
+    "name": "Chubbo",
+    "slug": "chubbo",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/chubbo",
+    "hint": ""
+  },
+  {
+    "name": "Chillax",
+    "slug": "chillax",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/chillax",
+    "hint": ""
+  },
+  {
+    "name": "Cabinet Grotesk",
+    "slug": "cabinet-grotesk",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/cabinet-grotesk",
+    "hint": "variable grotesque sans"
+  },
+  {
+    "name": "Britney",
+    "slug": "britney",
+    "categories": [
+      "script"
+    ],
+    "url": "https://www.fontshare.com/fonts/britney",
+    "hint": ""
+  },
+  {
+    "name": "Bonny",
+    "slug": "bonny",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/bonny",
+    "hint": ""
+  },
+  {
+    "name": "Bevellier",
+    "slug": "bevellier",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/bevellier",
+    "hint": ""
+  },
+  {
+    "name": "Archivo",
+    "slug": "archivo",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/archivo",
+    "hint": ""
+  },
+  {
+    "name": "Bebas Neue",
+    "slug": "bebas-neue",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/bebas-neue",
+    "hint": ""
+  },
+  {
+    "name": "Poppins",
+    "slug": "poppins",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/poppins",
+    "hint": ""
+  },
+  {
+    "name": "Dancing Script",
+    "slug": "dancing-script",
+    "categories": [
+      "script"
+    ],
+    "url": "https://www.fontshare.com/fonts/dancing-script",
+    "hint": ""
+  },
+  {
+    "name": "Anton",
+    "slug": "anton",
+    "categories": [
+      "sans, display"
+    ],
+    "url": "https://www.fontshare.com/fonts/anton",
+    "hint": ""
+  },
+  {
+    "name": "Be Vietnam Pro",
+    "slug": "beVietnam-pro",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/beVietnam-pro",
+    "hint": ""
+  },
+  {
+    "name": "Work Sans",
+    "slug": "work-sans",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/work-sans",
+    "hint": ""
+  },
+  {
+    "name": "Epilogue",
+    "slug": "epilogue",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/epilogue",
+    "hint": ""
+  },
+  {
+    "name": "Spline Sans",
+    "slug": "spline-sans",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/spline-sans",
+    "hint": ""
+  },
+  {
+    "name": "JetBrains Mono",
+    "slug": "jet-brains-mono",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/jet-brains-mono",
+    "hint": ""
+  },
+  {
+    "name": "Asap",
+    "slug": "asap",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/asap",
+    "hint": ""
+  },
+  {
+    "name": "Azeret Mono",
+    "slug": "azeret-mono",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/azeret-mono",
+    "hint": ""
+  },
+  {
+    "name": "Outfit",
+    "slug": "outfit",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/outfit",
+    "hint": ""
+  },
+  {
+    "name": "Plus Jakarta Sans",
+    "slug": "plus-jakarta-sans",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/plus-jakarta-sans",
+    "hint": ""
+  },
+  {
+    "name": "Oswald",
+    "slug": "oswald",
+    "categories": [
+      "sans, display"
+    ],
+    "url": "https://www.fontshare.com/fonts/oswald",
+    "hint": ""
+  },
+  {
+    "name": "Nunito",
+    "slug": "nunito",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/nunito",
+    "hint": ""
+  },
+  {
+    "name": "Crimson Pro",
+    "slug": "crimson-pro",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/crimson-pro",
+    "hint": ""
+  },
+  {
+    "name": "Fira Sans",
+    "slug": "fira-sans",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/fira-sans",
+    "hint": ""
+  },
+  {
+    "name": "Manrope",
+    "slug": "manrope",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/manrope",
+    "hint": ""
+  },
+  {
+    "name": "Public Sans",
+    "slug": "public-sans",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/public-sans",
+    "hint": ""
+  },
+  {
+    "name": "Lora",
+    "slug": "lora",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/lora",
+    "hint": ""
+  },
+  {
+    "name": "Montserrat",
+    "slug": "montserrat",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/montserrat",
+    "hint": ""
+  },
+  {
+    "name": "Familjen Grotesk",
+    "slug": "familjen-grotesk",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/familjen-grotesk",
+    "hint": ""
+  },
+  {
+    "name": "Erode",
+    "slug": "erode",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/erode",
+    "hint": ""
+  },
+  {
+    "name": "Neco",
+    "slug": "neco",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/neco",
+    "hint": ""
+  },
+  {
+    "name": "Excon",
+    "slug": "excon",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/excon",
+    "hint": ""
+  },
+  {
+    "name": "Roundo",
+    "slug": "roundo",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/roundo",
+    "hint": ""
+  },
+  {
+    "name": "Kola",
+    "slug": "kola",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/kola",
+    "hint": ""
+  },
+  {
+    "name": "Pencerio",
+    "slug": "pencerio",
+    "categories": [
+      "script"
+    ],
+    "url": "https://www.fontshare.com/fonts/pencerio",
+    "hint": ""
+  },
+  {
+    "name": "Kalam",
+    "slug": "kalam",
+    "categories": [
+      "handwriting"
+    ],
+    "url": "https://www.fontshare.com/fonts/kalam",
+    "hint": ""
+  },
+  {
+    "name": "Panchang",
+    "slug": "panchang",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/panchang",
+    "hint": ""
+  },
+  {
+    "name": "Hind",
+    "slug": "hind",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/hind",
+    "hint": ""
+  },
+  {
+    "name": "Nippo",
+    "slug": "nippo",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/nippo",
+    "hint": ""
+  },
+  {
+    "name": "Hoover",
+    "slug": "hoover",
+    "categories": [
+      "slab"
+    ],
+    "url": "https://www.fontshare.com/fonts/hoover",
+    "hint": ""
+  },
+  {
+    "name": "Pally",
+    "slug": "pally",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/pally",
+    "hint": ""
+  },
+  {
+    "name": "Space Grotesk",
+    "slug": "space-grotesk",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/space-grotesk",
+    "hint": ""
+  },
+  {
+    "name": "Rosaline",
+    "slug": "rosaline",
+    "categories": [
+      "script"
+    ],
+    "url": "https://www.fontshare.com/fonts/rosaline",
+    "hint": ""
+  },
+  {
+    "name": "Styro",
+    "slug": "styro",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/styro",
+    "hint": ""
+  },
+  {
+    "name": "Rajdhani",
+    "slug": "rajdhani",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/rajdhani",
+    "hint": ""
+  },
+  {
+    "name": "Satoshi",
+    "slug": "satoshi",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/satoshi",
+    "hint": "geometric modern sans"
+  },
+  {
+    "name": "Zina",
+    "slug": "zina",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/zina",
+    "hint": ""
+  },
+  {
+    "name": "Segment",
+    "slug": "segment",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/segment",
+    "hint": ""
+  },
+  {
+    "name": "Stardom",
+    "slug": "stardom",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/stardom",
+    "hint": ""
+  },
+  {
+    "name": "Sharpie",
+    "slug": "sharpie",
+    "categories": [
+      "display"
+    ],
+    "url": "https://www.fontshare.com/fonts/sharpie",
+    "hint": ""
+  },
+  {
+    "name": "RX100",
+    "slug": "rx-100",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/rx-100",
+    "hint": ""
+  },
+  {
+    "name": "Telma",
+    "slug": "telma",
+    "categories": [
+      "script"
+    ],
+    "url": "https://www.fontshare.com/fonts/telma",
+    "hint": ""
+  },
+  {
+    "name": "Plein",
+    "slug": "plein",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/plein",
+    "hint": ""
+  },
+  {
+    "name": "Ranade",
+    "slug": "ranade",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/ranade",
+    "hint": ""
+  },
+  {
+    "name": "Trench Slab",
+    "slug": "trench-slab",
+    "categories": [
+      "slab"
+    ],
+    "url": "https://www.fontshare.com/fonts/trench-slab",
+    "hint": ""
+  },
+  {
+    "name": "Recia",
+    "slug": "recia",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/recia",
+    "hint": ""
+  },
+  {
+    "name": "Zodiak",
+    "slug": "zodiak",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/zodiak",
+    "hint": ""
+  },
+  {
+    "name": "Pramukh Rounded",
+    "slug": "pramukh-rounded",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/pramukh-rounded",
+    "hint": ""
+  },
+  {
+    "name": "Supreme",
+    "slug": "supreme",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/supreme",
+    "hint": ""
+  },
+  {
+    "name": "Quilon",
+    "slug": "quilon",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/quilon",
+    "hint": ""
+  },
+  {
+    "name": "Paquito",
+    "slug": "paquito",
+    "categories": [
+      "serif, slab"
+    ],
+    "url": "https://www.fontshare.com/fonts/paquito",
+    "hint": ""
+  },
+  {
+    "name": "Khand",
+    "slug": "khand",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/khand",
+    "hint": ""
+  },
+  {
+    "name": "Red Hat Display",
+    "slug": "red-hat-display",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/red-hat-display",
+    "hint": ""
+  },
+  {
+    "name": "Sora",
+    "slug": "sora",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/sora",
+    "hint": ""
+  },
+  {
+    "name": "Literata",
+    "slug": "literata",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/literata",
+    "hint": ""
+  },
+  {
+    "name": "Merriweather Sans",
+    "slug": "merriweather-sans",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/merriweather-sans",
+    "hint": ""
+  },
+  {
+    "name": "Quicksand",
+    "slug": "quicksand",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/quicksand",
+    "hint": ""
+  },
+  {
+    "name": "Teko",
+    "slug": "teko",
+    "categories": [
+      "sans"
+    ],
+    "url": "https://www.fontshare.com/fonts/teko",
+    "hint": ""
+  },
+  {
+    "name": "Karma",
+    "slug": "karma",
+    "categories": [
+      "serif"
+    ],
+    "url": "https://www.fontshare.com/fonts/karma",
+    "hint": ""
+  }
+]
