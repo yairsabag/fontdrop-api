@@ -26,6 +26,7 @@ FREE_DAILY_SCAN_LIMIT = 10
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 WHATFONTIS_API_KEY = os.getenv("WHATFONTIS_API_KEY", "")
 FONTDROP_API_SECRET = os.getenv("FONTDROP_API_SECRET", "")
+FONTDROP_CLIENT_TOKEN = os.getenv("FONTDROP_CLIENT_TOKEN", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
 
 app = FastAPI(title="FontDrop API", version=APP_VERSION)
@@ -52,9 +53,20 @@ def health():
 
 
 def verify_api_secret(x_fontdrop_secret: str | None):
-    if not FONTDROP_API_SECRET:
+    allowed_tokens = set()
+
+    if FONTDROP_API_SECRET:
+        allowed_tokens.add(FONTDROP_API_SECRET)
+
+    if FONTDROP_CLIENT_TOKEN:
+        allowed_tokens.add(FONTDROP_CLIENT_TOKEN)
+
+    # If no token is configured, allow requests.
+    # In production, configure at least FONTDROP_CLIENT_TOKEN.
+    if not allowed_tokens:
         return
-    if x_fontdrop_secret != FONTDROP_API_SECRET:
+
+    if x_fontdrop_secret not in allowed_tokens:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
