@@ -5,3 +5,4 @@ __pycache__/
 data/
 cache/
 main_backup_*.py
+.env.save
