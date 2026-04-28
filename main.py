@@ -17,6 +17,9 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
 from pydantic import BaseModel
 from google import genai
+from appwrite.client import Client
+from appwrite.services.databases import Databases
+from appwrite.id import ID
 
 load_dotenv()
 
@@ -29,9 +32,28 @@ FONTDROP_API_SECRET = os.getenv("FONTDROP_API_SECRET", "")
 FONTDROP_CLIENT_TOKEN = os.getenv("FONTDROP_CLIENT_TOKEN", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
 
+APPWRITE_ENDPOINT = os.getenv("APPWRITE_ENDPOINT", "")
+APPWRITE_PROJECT_ID = os.getenv("APPWRITE_PROJECT_ID", "")
+APPWRITE_API_KEY = os.getenv("APPWRITE_API_KEY", "")
+APPWRITE_DATABASE_ID = os.getenv("APPWRITE_DATABASE_ID", "")
+APPWRITE_USAGE_LOG_TABLE_ID = os.getenv("APPWRITE_USAGE_LOG_TABLE_ID", "")
+
 app = FastAPI(title="FontDrop API", version=APP_VERSION)
 
 gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+
+appwrite_db = None
+if APPWRITE_ENDPOINT and APPWRITE_PROJECT_ID and APPWRITE_API_KEY:
+    try:
+        _appwrite_client = Client()
+        _appwrite_client.set_endpoint(APPWRITE_ENDPOINT)
+        _appwrite_client.set_project(APPWRITE_PROJECT_ID)
+        _appwrite_client.set_key(APPWRITE_API_KEY)
+        appwrite_db = Databases(_appwrite_client)
+        print("✓ Appwrite usage logging configured")
+    except Exception as e:
+        print(f"⚠ Appwrite init failed: {e}")
+        appwrite_db = None
 
 
 class IdentifyRequest(BaseModel):
@@ -78,6 +100,45 @@ def load_json_file(filename: str, default):
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return default
+
+
+def log_usage_event(
+    device_id: str,
+    action: str,
+    status: str,
+    app_version: str | None = None,
+    script: str | None = None,
+    font_detected: str | None = None,
+    error: str | None = None,
+    usage: dict | None = None,
+):
+    """Best-effort write to Appwrite usage_log. Never blocks the main result."""
+    if not appwrite_db or not APPWRITE_DATABASE_ID or not APPWRITE_USAGE_LOG_TABLE_ID:
+        return
+
+    try:
+        metadata = {
+            "status": status,
+            "font_detected": font_detected,
+            "script": script,
+            "app_version": app_version,
+            "error": error,
+            "usage": usage or {},
+        }
+
+        appwrite_db.create_document(
+            database_id=APPWRITE_DATABASE_ID,
+            collection_id=APPWRITE_USAGE_LOG_TABLE_ID,
+            document_id=ID.unique(),
+            data={
+                "user_id": device_id or "anonymous",
+                "device_id": device_id or "anonymous",
+                "action": action,
+                "metadata": json.dumps(metadata, ensure_ascii=False),
+            },
+        )
+    except Exception as e:
+        print(f"⚠ Appwrite usage_log write failed: {e}")
 
 
 def today_key() -> str:
@@ -435,16 +496,28 @@ def identify(req: IdentifyRequest, x_fontdrop_secret: str | None = Header(defaul
 
     quota = enforce_and_increment_quota(req.device_id or "anonymous")
     if not quota.get("allowed"):
+        usage_payload = {
+            "plan": quota["plan"],
+            "used_today": quota["used_today"],
+            "daily_limit": quota["daily_limit"],
+            "remaining_today": quota["remaining_today"],
+        }
+
+        log_usage_event(
+            device_id=req.device_id or "anonymous",
+            action="identify",
+            status="daily_limit_reached",
+            app_version=req.app_version,
+            script=req.script or "latin",
+            error="daily_limit_reached",
+            usage=usage_payload,
+        )
+
         return {
             "ok": False,
             "error": "daily_limit_reached",
             "message": quota["message"],
-            "usage": {
-                "plan": quota["plan"],
-                "used_today": quota["used_today"],
-                "daily_limit": quota["daily_limit"],
-                "remaining_today": quota["remaining_today"],
-            },
+            "usage": usage_payload,
         }
 
     candidates = run_whatfontis_pipeline(req.image_base64)
@@ -484,18 +557,46 @@ def identify(req: IdentifyRequest, x_fontdrop_secret: str | None = Header(defaul
         data["_mode"] = "server"
         data["_candidates"] = candidates[:8]
 
+        usage_payload = {
+            "plan": quota["plan"],
+            "used_today": quota["used_today"],
+            "daily_limit": quota["daily_limit"],
+            "remaining_today": quota["remaining_today"],
+        }
+
+        log_usage_event(
+            device_id=req.device_id or "anonymous",
+            action="identify",
+            status="success",
+            app_version=req.app_version,
+            script=req.script or "latin",
+            font_detected=data.get("original_font"),
+            usage=usage_payload,
+        )
+
         return {
             "ok": True,
             "result": data,
-            "usage": {
-                "plan": quota["plan"],
-                "used_today": quota["used_today"],
-                "daily_limit": quota["daily_limit"],
-                "remaining_today": quota["remaining_today"],
-            },
+            "usage": usage_payload,
         }
 
     except json.JSONDecodeError:
+        log_usage_event(
+            device_id=req.device_id or "anonymous",
+            action="identify",
+            status="error",
+            app_version=req.app_version,
+            script=req.script or "latin",
+            error="Gemini returned invalid JSON",
+        )
         raise HTTPException(status_code=502, detail="Gemini returned invalid JSON")
     except Exception as e:
+        log_usage_event(
+            device_id=req.device_id or "anonymous",
+            action="identify",
+            status="error",
+            app_version=req.app_version,
+            script=req.script or "latin",
+            error=f"Gemini failed: {str(e)}",
+        )
         raise HTTPException(status_code=502, detail=f"Gemini failed: {str(e)}")

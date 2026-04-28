@@ -7,3 +7,4 @@ openai
 pillow
 pydantic
 python-dotenv
+appwrite
