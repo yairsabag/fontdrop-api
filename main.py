@@ -68,9 +68,10 @@ def health():
     return {
         "ok": True,
         "service": "fontdrop-api",
-        "version": APP_VERSION,
+        "version": "1.0.6",
         "gemini_configured": bool(GEMINI_API_KEY),
         "whatfontis_configured": bool(WHATFONTIS_API_KEY),
+        "appwrite_configured": bool(appwrite_db and APPWRITE_DATABASE_ID and APPWRITE_USAGE_LOG_TABLE_ID),
     }
 
 
