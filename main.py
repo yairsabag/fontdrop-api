@@ -439,6 +439,8 @@ You are FontDrop, an expert font identification engine.
 Task:
 Identify the font in the image and suggest the closest free alternatives.
 
+Also extract sample_text: the exact visible text from the selected image. Preserve capitalization and punctuation when possible. If unreadable, return an empty string. Do not invent text.
+
 Important:
 - Use the WhatFontIs ranked candidates as strong hints.
 - Prefer the visually closest font, not only the highest score.
@@ -459,6 +461,7 @@ Fontshare catalog sample:
 Return this JSON schema:
 {{
   "original_font": "Font Name",
+  "sample_text": "Exact visible text from the image",
   "script": "{script}",
   "category": "sans-serif | serif | display | script | monospace | other",
   "confidence": "low | medium | high",
