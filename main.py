@@ -169,6 +169,51 @@ def save_quota_usage(data: dict):
     tmp.replace(path)
 
 
+
+def has_active_subscription(device_id: str) -> bool:
+    """Return True if this device/user has an active paid subscription."""
+    if not device_id:
+        return False
+
+    try:
+        # Appwrite collection IDs in this project are simple table names.
+        # We check user_id because desktop trial users use device_id as user_id.
+        from appwrite.query import Query
+
+        res = appwrite_db.list_documents(
+            database_id=APPWRITE_DATABASE_ID,
+            collection_id="subscriptions",
+            queries=[
+                Query.equal("user_id", device_id),
+                Query.equal("status", "active"),
+                Query.limit(1),
+            ],
+        )
+
+        docs = res.get("documents", []) if isinstance(res, dict) else getattr(res, "documents", [])
+        if not docs:
+            return False
+
+        sub = docs[0]
+
+        # If the row exists and is active, treat it as paid/dev unlimited.
+        # Optional expiry check if current_period_end exists.
+        expires = sub.get("current_period_end") if isinstance(sub, dict) else None
+        if expires:
+            try:
+                from datetime import datetime, timezone
+                exp = datetime.fromisoformat(str(expires).replace("Z", "+00:00"))
+                if exp < datetime.now(timezone.utc):
+                    return False
+            except Exception:
+                pass
+
+        return True
+
+    except Exception as e:
+        print(f"⚠ Subscription quota check failed: {e}")
+        return False
+
 def get_device_quota(device_id: str) -> dict:
     usage = load_quota_usage()
     day = today_key()
@@ -185,9 +230,29 @@ def get_device_quota(device_id: str) -> dict:
 
 
 def enforce_and_increment_quota(device_id: str) -> dict:
+    if os.environ.get("DISABLE_QUOTA", "").lower() in ("1", "true", "yes"):
+        return {
+            "allowed": True,
+            "plan": "dev",
+            "used_today": 0,
+            "daily_limit": 999999,
+            "remaining_today": 999999,
+            "message": "Dev quota disabled",
+        }
+
     usage = load_quota_usage()
     day = today_key()
     device_key = device_id or "anonymous"
+
+    if has_active_subscription(device_key):
+        return {
+            "allowed": True,
+            "plan": "pro",
+            "used_today": 0,
+            "daily_limit": 999999,
+            "remaining_today": 999999,
+            "message": "Pro plan",
+        }
 
     # Keep only today's usage to avoid file growth
     if day not in usage:
@@ -415,6 +480,126 @@ def run_whatfontis_pipeline(image_b64: str) -> list[dict[str, Any]]:
     return scored[:10]
 
 
+
+def _norm_font_name(name: str) -> str:
+    return "".join(ch for ch in str(name or "").lower() if ch.isalnum())
+
+def _build_google_font_index() -> dict:
+    try:
+        from google_fonts_catalog import get_catalog
+        catalog = get_catalog()
+        idx = {}
+        for key, fonts in catalog.items():
+            if key.startswith("_") or not isinstance(fonts, list):
+                continue
+            for font in fonts:
+                idx[_norm_font_name(font)] = font
+        return idx
+    except Exception as e:
+        print(f"⚠ Google font index failed: {e}")
+        return {}
+
+def _build_fontshare_index() -> dict:
+    try:
+        rows = load_json_file("fontshare_catalog.json", [])
+        idx = {}
+        if isinstance(rows, list):
+            for item in rows:
+                name = item.get("name", "")
+                if name:
+                    idx[_norm_font_name(name)] = item
+        return idx
+    except Exception as e:
+        print(f"⚠ Fontshare index failed: {e}")
+        return {}
+
+def validate_free_alternatives(data: dict) -> dict:
+    """Keep only alternatives that really exist in Google Fonts or Fontshare."""
+    alternatives = data.get("alternatives") or data.get("free_alternatives") or []
+
+    if not isinstance(alternatives, list):
+        data["alternatives"] = []
+        data["free_alternatives"] = []
+        return data
+
+    google_idx = _build_google_font_index()
+    fontshare_idx = _build_fontshare_index()
+
+    valid = []
+    seen = set()
+
+    for alt in alternatives:
+        if not isinstance(alt, dict):
+            continue
+
+        raw_name = alt.get("name") or alt.get("font") or alt.get("family")
+        key = _norm_font_name(raw_name)
+
+        if not key or key in seen:
+            continue
+
+        similarity = alt.get("similarity", alt.get("score", 0))
+
+        if key in google_idx:
+            name = google_idx[key]
+            valid.append({
+                "name": name,
+                "source": "Google Fonts",
+                "similarity": similarity,
+                "url": f"https://fonts.google.com/specimen/{name.replace(' ', '+')}",
+            })
+            seen.add(key)
+            continue
+
+        if key in fontshare_idx:
+            item = fontshare_idx[key]
+            name = item.get("name", raw_name)
+            valid.append({
+                "name": name,
+                "source": "Fontshare",
+                "similarity": similarity,
+                "url": item.get("url") or f"https://www.fontshare.com/fonts/{item.get('slug', '')}",
+            })
+            seen.add(key)
+            continue
+
+        print(f"  ✗ Dropped invalid free alternative: {raw_name}")
+
+    # If the AI returned invalid/hallucinated alternatives and too few remain,
+    # fill the missing slots with real Google Fonts from the same category.
+    if len(valid) < 3:
+        try:
+            from google_fonts_catalog import get_fonts_by_category
+
+            category = str(data.get("category") or "sans-serif").lower()
+            original_key = _norm_font_name(data.get("original_font", ""))
+
+            fallback_fonts = get_fonts_by_category(category, limit=60)
+
+            for font_name in fallback_fonts:
+                key = _norm_font_name(font_name)
+
+                if not key or key in seen or key == original_key:
+                    continue
+
+                valid.append({
+                    "name": font_name,
+                    "source": "Google Fonts",
+                    "similarity": max(55, 78 - (len(valid) * 4)),
+                    "url": f"https://fonts.google.com/specimen/{font_name.replace(' ', '+')}",
+                })
+                seen.add(key)
+
+                if len(valid) >= 6:
+                    break
+
+        except Exception as e:
+            print(f"  ⚠ Could not fill fallback alternatives: {e}")
+
+    data["alternatives"] = valid[:6]
+    data["free_alternatives"] = valid[:6]
+    return data
+
 def make_prompt(script: str, candidates: list[dict[str, Any]]) -> str:
     font_tags = load_json_file("font_tags.json", {})
     fontshare_catalog = load_json_file("fontshare_catalog.json", [])
@@ -444,7 +629,9 @@ Also extract sample_text: the exact visible text from the selected image. Preser
 Important:
 - Use the WhatFontIs ranked candidates as strong hints.
 - Prefer the visually closest font, not only the highest score.
-- Always include free alternatives when possible.
+- Always include 5-6 free alternatives when possible.
+- Free alternatives must be real fonts from Google Fonts or Fontshare only.
+- Do not list commercial/paid WhatFontIs candidates as free alternatives unless they are also available from Google Fonts or Fontshare.
 - Return JSON only. No markdown.
 
 Script: {script}
@@ -556,6 +743,7 @@ def identify(req: IdentifyRequest, x_fontdrop_secret: str | None = Header(defaul
             text = text.replace("```json", "").replace("```", "").strip()
 
         data = json.loads(text)
+        data = validate_free_alternatives(data)
         data["_engine"] = "gemini"
         data["_image_hash"] = image_hash
         data["_mode"] = "server"
