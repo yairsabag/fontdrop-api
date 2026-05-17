@@ -24,7 +24,6 @@ from appwrite.id import ID
 load_dotenv()
 
 APP_VERSION = "1.0.6"
-FREE_DAILY_SCAN_LIMIT = 10
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 WHATFONTIS_API_KEY = os.getenv("WHATFONTIS_API_KEY", "")
@@ -142,8 +141,13 @@ def log_usage_event(
         print(f"⚠ Appwrite usage_log write failed: {e}")
 
 
-def today_key() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+FREE_MONTHLY_SCAN_LIMIT = 20
+PRO_MONTHLY_SCAN_LIMIT = 250
+STUDIO_MONTHLY_SCAN_LIMIT = 1000
+
+
+def month_key() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m")
 
 
 def quota_path() -> Path:
@@ -169,15 +173,24 @@ def save_quota_usage(data: dict):
     tmp.replace(path)
 
 
+def _plan_limit(plan: str) -> int:
+    plan = str(plan or "free").lower()
 
-def has_active_subscription(device_id: str) -> bool:
-    """Return True if this device/user has an active paid subscription."""
+    if plan in ("pro", "basic", "paid"):
+        return PRO_MONTHLY_SCAN_LIMIT
+
+    if plan in ("studio", "agency"):
+        return STUDIO_MONTHLY_SCAN_LIMIT
+
+    return FREE_MONTHLY_SCAN_LIMIT
+
+
+def _get_subscription_plan(device_id: str) -> str:
+    """Return free/pro/studio according to Appwrite subscriptions."""
     if not device_id:
-        return False
+        return "free"
 
     try:
-        # Appwrite collection IDs in this project are simple table names.
-        # We check user_id because desktop trial users use device_id as user_id.
         from appwrite.query import Query
 
         res = appwrite_db.list_documents(
@@ -185,47 +198,99 @@ def has_active_subscription(device_id: str) -> bool:
             collection_id="subscriptions",
             queries=[
                 Query.equal("user_id", device_id),
-                Query.equal("status", "active"),
-                Query.limit(1),
+                Query.limit(20),
             ],
         )
 
         docs = res.get("documents", []) if isinstance(res, dict) else getattr(res, "documents", [])
         if not docs:
-            return False
+            return "free"
 
-        sub = docs[0]
+        active_docs = []
 
-        # If the row exists and is active, treat it as paid/dev unlimited.
-        # Optional expiry check if current_period_end exists.
-        expires = sub.get("current_period_end") if isinstance(sub, dict) else None
-        if expires:
-            try:
-                from datetime import datetime, timezone
-                exp = datetime.fromisoformat(str(expires).replace("Z", "+00:00"))
-                if exp < datetime.now(timezone.utc):
-                    return False
-            except Exception:
-                pass
+        for sub in docs:
+            if not isinstance(sub, dict):
+                continue
 
-        return True
+            status = str(sub.get("status", "")).lower()
+            plan = str(sub.get("plan", "free")).lower()
+
+            # Old trial/free rows should behave as free plan.
+            if plan in ("trial", ""):
+                plan = "free"
+
+            # Free plan is active as long as a row exists.
+            if plan == "free":
+                active_docs.append({**sub, "plan": "free"})
+                continue
+
+            if status not in ("active", "trialing", "on_trial", "past_due"):
+                continue
+
+            # Optional expiry check for paid plans.
+            expires = sub.get("current_period_end") or sub.get("trial_ends_at")
+            if expires:
+                try:
+                    exp = datetime.fromisoformat(str(expires).replace("Z", "+00:00"))
+                    if exp < datetime.now(timezone.utc):
+                        continue
+                except Exception:
+                    pass
+
+            active_docs.append({**sub, "plan": plan})
+
+        if not active_docs:
+            return "free"
+
+        # Prefer strongest plan if multiple rows exist.
+        priority = {
+            "studio": 3,
+            "pro": 2,
+            "basic": 2,
+            "paid": 2,
+            "free": 1,
+            "trial": 1,
+        }
+
+        best = sorted(
+            active_docs,
+            key=lambda x: priority.get(str(x.get("plan", "free")).lower(), 1),
+            reverse=True,
+        )[0]
+
+        plan = str(best.get("plan", "free")).lower()
+
+        if plan in ("basic", "paid"):
+            return "pro"
+
+        if plan in ("trial", ""):
+            return "free"
+
+        if plan not in ("free", "pro", "studio"):
+            return "free"
+
+        return plan
 
     except Exception as e:
-        print(f"⚠ Subscription quota check failed: {e}")
-        return False
+        print(f"⚠ Subscription plan check failed: {e}")
+        return "free"
+
 
 def get_device_quota(device_id: str) -> dict:
     usage = load_quota_usage()
-    day = today_key()
+    month = month_key()
     device_key = device_id or "anonymous"
 
-    current = usage.get(day, {}).get(device_key, 0)
+    plan = _get_subscription_plan(device_key)
+    limit = _plan_limit(plan)
+    current = usage.get(month, {}).get(device_key, 0)
 
     return {
-        "plan": "free",
-        "used_today": current,
-        "daily_limit": FREE_DAILY_SCAN_LIMIT,
-        "remaining_today": max(0, FREE_DAILY_SCAN_LIMIT - current),
+        "plan": plan,
+        "used_today": current,        # kept for desktop compatibility
+        "daily_limit": limit,         # kept for desktop compatibility
+        "remaining_today": max(0, limit - current),
+        "period": "month",
     }
 
 
@@ -237,51 +302,47 @@ def enforce_and_increment_quota(device_id: str) -> dict:
             "used_today": 0,
             "daily_limit": 999999,
             "remaining_today": 999999,
+            "period": "month",
             "message": "Dev quota disabled",
         }
 
     usage = load_quota_usage()
-    day = today_key()
+    month = month_key()
     device_key = device_id or "anonymous"
 
-    if has_active_subscription(device_key):
-        return {
-            "allowed": True,
-            "plan": "pro",
-            "used_today": 0,
-            "daily_limit": 999999,
-            "remaining_today": 999999,
-            "message": "Pro plan",
-        }
+    # Keep only current month to avoid file growth.
+    if month not in usage:
+        usage = {month: {}}
 
-    # Keep only today's usage to avoid file growth
-    if day not in usage:
-        usage = {day: {}}
+    current = usage.get(month, {}).get(device_key, 0)
 
-    current = usage.get(day, {}).get(device_key, 0)
+    plan = _get_subscription_plan(device_key)
+    limit = _plan_limit(plan)
 
-    if current >= FREE_DAILY_SCAN_LIMIT:
+    if current >= limit:
+        plan_label = plan.capitalize()
         return {
             "allowed": False,
-            "plan": "free",
+            "plan": plan,
             "used_today": current,
-            "daily_limit": FREE_DAILY_SCAN_LIMIT,
+            "daily_limit": limit,
             "remaining_today": 0,
-            "message": "You’ve used your 10 free scans for today. Your limit resets tomorrow, or you can upgrade for more scans.",
+            "period": "month",
+            "message": f"You’ve used your {plan_label} plan scans for this month. Upgrade for more scans.",
         }
 
-    usage.setdefault(day, {})
-    usage[day][device_key] = current + 1
+    usage.setdefault(month, {})
+    usage[month][device_key] = current + 1
     save_quota_usage(usage)
 
     return {
         "allowed": True,
-        "plan": "free",
+        "plan": plan,
         "used_today": current + 1,
-        "daily_limit": FREE_DAILY_SCAN_LIMIT,
-        "remaining_today": max(0, FREE_DAILY_SCAN_LIMIT - (current + 1)),
+        "daily_limit": limit,
+        "remaining_today": max(0, limit - (current + 1)),
+        "period": "month",
     }
-
 
 def preprocess_for_whatfontis(image_b64: str) -> str:
     try:
